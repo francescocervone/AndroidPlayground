@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Movies</string>
+    <string name="generic_error">An error has occurred</string>
+    <string name="no_results">There are no results</string>
+</resources>
