@@ -9,7 +9,7 @@ import java.util.List;
 public interface SearchMoviesCache {
     void put(String query, int page, List<Movie> movies);
 
-    List<Movie> get(String query) throws CacheMissException;
+    List<List<Movie>> get(String query) throws CacheMissException;
 
     void clear(String query);
 }

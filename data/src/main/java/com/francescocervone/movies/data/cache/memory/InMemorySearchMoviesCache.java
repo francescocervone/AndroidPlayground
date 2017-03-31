@@ -29,15 +29,15 @@ public class InMemorySearchMoviesCache implements SearchMoviesCache {
     }
 
     @Override
-    public List<Movie> get(String query) throws CacheMissException {
+    public List<List<Movie>> get(String query) throws CacheMissException {
         SortedMap<Integer, List<Movie>> pagesMap = mSearchesCache.get(query);
         if (pagesMap == null) {
             throw new CacheMissException();
         }
 
-        List<Movie> movies = new ArrayList<>();
+        List<List<Movie>> movies = new ArrayList<>();
         for (Map.Entry<Integer, List<Movie>> entry : pagesMap.entrySet()) {
-            movies.addAll(Collections.unmodifiableList(entry.getValue()));
+            movies.add(Collections.unmodifiableList(entry.getValue()));
         }
         if (movies.isEmpty()) {
             throw new CacheMissException();

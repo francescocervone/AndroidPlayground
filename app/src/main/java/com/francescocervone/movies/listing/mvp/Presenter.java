@@ -3,32 +3,31 @@ package com.francescocervone.movies.listing.mvp;
 
 import com.francescocervone.movies.domain.UseCase;
 import com.francescocervone.movies.domain.model.Movie;
+import com.francescocervone.movies.domain.model.MoviesPage;
 import com.francescocervone.movies.domain.usecases.NowPlayingMovies;
 import com.francescocervone.movies.domain.usecases.SearchMovies;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 import static com.francescocervone.movies.common.TextUtils.isEmpty;
 
 public class Presenter implements MoviesContract.Presenter {
     private CompositeDisposable mRequestsCompositeDisposable = new CompositeDisposable();
     private CompositeDisposable mViewCompositeDisposable = new CompositeDisposable();
-    private UseCase<NowPlayingMovies.Request, List<Movie>> mNowPlayingMovies;
-    private UseCase<SearchMovies.Request, List<Movie>> mSearchMovies;
+    private UseCase<NowPlayingMovies.Request, MoviesPage> mNowPlayingMovies;
+    private UseCase<SearchMovies.Request, MoviesPage> mSearchMovies;
     private MoviesContract.View mView;
     private int mCurrentPage = -1;
     private String mQuery;
 
     @Inject
-    public Presenter(UseCase<NowPlayingMovies.Request, List<Movie>> nowPlayingMovies,
-                     UseCase<SearchMovies.Request, List<Movie>> searchMovies,
+    public Presenter(UseCase<NowPlayingMovies.Request, MoviesPage> nowPlayingMovies,
+                     UseCase<SearchMovies.Request, MoviesPage> searchMovies,
                      MoviesContract.View view) {
         mNowPlayingMovies = nowPlayingMovies;
         mSearchMovies = searchMovies;
@@ -37,100 +36,82 @@ public class Presenter implements MoviesContract.Presenter {
 
     @Override
     public void start() {
-        Disposable queryDisposable = mView.observeQuery()
+        mViewCompositeDisposable.add(mView.observeQuery()
                 .distinctUntilChanged()
-                .subscribe(query -> {
-                    if (isEmpty(query)) {
-                        load();
-                    } else {
-                        search(query);
-                    }
-                });
+                .subscribe(this::load));
 
-        Disposable movieClicksDisposable = mView.observeMovieClicks()
+        mViewCompositeDisposable.add(mView.observeMovieClicks()
                 .subscribe(movieId -> {
                     mView.openMovieDetails(movieId);
-                });
-        mViewCompositeDisposable.add(queryDisposable);
-        mViewCompositeDisposable.add(movieClicksDisposable);
-    }
-
-    @Override
-    public void stop() {
-        mRequestsCompositeDisposable.clear();
-        mViewCompositeDisposable.clear();
+                }));
     }
 
     @Override
     public void load() {
-        prepareNewSearch();
-        Disposable disposable = mNowPlayingMovies.execute(NowPlayingMovies.Request.firstPage())
-                .subscribe(this::dispatchPageReceived, throwable -> {
-                    dispatchError();
-                    throwable.printStackTrace();
-                });
-        mRequestsCompositeDisposable.add(disposable);
+        load(null);
+    }
+
+    private void load(String query) {
+        prepareNewSearch(query);
+
+        Flowable<MoviesPage> requestFlowable;
+        if (isEmpty(query)) {
+            NowPlayingMovies.Request request = NowPlayingMovies.Request.firstPage();
+            requestFlowable = mNowPlayingMovies.execute(request);
+        } else {
+            SearchMovies.Request request = SearchMovies.Request.from(query);
+            requestFlowable = mSearchMovies.execute(request);
+        }
+
+        mRequestsCompositeDisposable.add(
+                requestFlowable
+                        .subscribe(moviesPage -> firstPageReceived(moviesPage.getMovies()),
+                                throwable -> {
+                                    dispatchError();
+                                    throwable.printStackTrace();
+                                }));
     }
 
     @Override
     public void loadMore() {
         mView.showListLoader();
 
-        Flowable<List<Movie>> flowable;
+        Flowable<MoviesPage> flowable;
         if (isEmpty(mQuery)) {
             flowable = mNowPlayingMovies.execute(NowPlayingMovies.Request.page(++mCurrentPage));
         } else {
             flowable = mSearchMovies.execute(SearchMovies.Request.from(mQuery, ++mCurrentPage));
         }
 
-        Disposable disposable = flowable
-                .subscribe(movies -> {
-                    mView.appendMovies(movies);
+        mRequestsCompositeDisposable.add(flowable
+                .subscribe(page -> {
+                    mView.appendMovies(page.getMovies());
                     mView.hideListLoader();
                 }, throwable -> {
                     mView.showListError();
                     mView.hideListLoader();
-                });
-        mRequestsCompositeDisposable.add(disposable);
+                }));
     }
 
     @Override
     public void restore(String query) {
         prepareNewSearch(query);
 
-        Flowable<List<Movie>> flowable;
+        Flowable<MoviesPage> flowable;
         if (isEmpty(query)) {
             flowable = mNowPlayingMovies.execute(NowPlayingMovies.Request.fromCache());
         } else {
             flowable = mSearchMovies.execute(SearchMovies.Request.fromCache(query));
         }
 
-        Disposable countDisposable = flowable.count()
-                .subscribe(pages -> mCurrentPage = pages.intValue() - 1);
-
-        Disposable pagesDisposable = flowable
-                .collectInto(new ArrayList<Movie>(), List::addAll)
-                .subscribe(this::dispatchPageReceived, throwable -> {
+        mRequestsCompositeDisposable.add(flowable
+                .subscribe(moviesPage -> {
+                    mCurrentPage = moviesPage.getPageNumber();
+                    firstPageReceived(moviesPage.getMovies());
+                }, throwable -> {
                     dispatchError();
                     throwable.printStackTrace();
-                });
-
-        mRequestsCompositeDisposable.add(countDisposable);
-        mRequestsCompositeDisposable.add(pagesDisposable);
-    }
-
-    private void search(String query) {
-        prepareNewSearch(query);
-        Disposable disposable = mSearchMovies.execute(SearchMovies.Request.from(query))
-                .subscribe(this::dispatchPageReceived, throwable -> {
-                    dispatchError();
-                    throwable.printStackTrace();
-                });
-        mRequestsCompositeDisposable.add(disposable);
-    }
-
-    private void prepareNewSearch() {
-        prepareNewSearch(null);
+                }));
     }
 
     private void prepareNewSearch(String query) {
@@ -144,7 +125,7 @@ public class Presenter implements MoviesContract.Presenter {
         mView.clearMovies();
     }
 
-    private void dispatchPageReceived(List<Movie> movies) {
+    private void firstPageReceived(List<Movie> movies) {
         mCurrentPage++;
         if (movies.isEmpty()) {
             mView.showEmptyView();
@@ -158,5 +139,11 @@ public class Presenter implements MoviesContract.Presenter {
     private void dispatchError() {
         mView.hideContentLoader();
         mView.showContentError();
+    }
+
+    @Override
+    public void stop() {
+        mRequestsCompositeDisposable.clear();
+        mViewCompositeDisposable.clear();
     }
 }

@@ -11,11 +11,11 @@ import io.reactivex.Flowable;
 public interface MoviesRepository {
     Flowable<List<Movie>> getNowPlayingMovies(int page);
 
-    Flowable<List<Movie>> getNowPlayingMoviesCache();
+    Flowable<List<List<Movie>>> getNowPlayingMoviesCache();
 
     Flowable<List<Movie>> getMovies(String query, int page);
 
-    Flowable<List<Movie>> getMoviesCache(String query);
+    Flowable<List<List<Movie>>> getMoviesCache(String query);
 
     Flowable<MovieDetails> getMovieDetails(String id);
 }

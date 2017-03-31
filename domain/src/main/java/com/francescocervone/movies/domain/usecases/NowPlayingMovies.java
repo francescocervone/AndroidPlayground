@@ -3,19 +3,16 @@ package com.francescocervone.movies.domain.usecases;
 
 import com.francescocervone.movies.domain.CacheMissException;
 import com.francescocervone.movies.domain.MoviesRepository;
-import com.francescocervone.movies.domain.UseCase;
-import com.francescocervone.movies.domain.model.Movie;
+import com.francescocervone.movies.domain.model.MoviesPage;
 
 import org.reactivestreams.Publisher;
-
-import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
-public class NowPlayingMovies extends UseCase<NowPlayingMovies.Request, List<Movie>> {
+public class NowPlayingMovies extends MoviesUseCase<NowPlayingMovies.Request> {
     private final MoviesRepository mRepository;
 
     public NowPlayingMovies(Scheduler executionScheduler,
@@ -26,20 +23,23 @@ public class NowPlayingMovies extends UseCase<NowPlayingMovies.Request, List<Mov
     }
 
     @Override
-    protected Flowable<List<Movie>> observable(final Request params) {
+    protected Flowable<MoviesPage> observable(final Request params) {
         if (params.mFromCache) {
             return mRepository.getNowPlayingMoviesCache()
-                    .onErrorResumeNext(new Function<Throwable, Publisher<? extends List<Movie>>>() {
+                    .map(mapListOfPagesToSinglePage())
+                    .onErrorResumeNext(new Function<Throwable, Publisher<? extends MoviesPage>>() {
                         @Override
-                        public Publisher<? extends List<Movie>> apply(@NonNull Throwable throwable) throws Exception {
+                        public Publisher<? extends MoviesPage> apply(@NonNull Throwable throwable) throws Exception {
                             if (throwable instanceof CacheMissException) {
                                 return observable(Request.firstPage());
                             }
                             return Flowable.error(throwable);
                         }
                     });
+
         }
-        return mRepository.getNowPlayingMovies(params.mPage);
+        return mRepository.getNowPlayingMovies(params.mPage)
+                .map(mapPage(params.mPage));
     }
 
     public static class Request {
@@ -56,7 +56,7 @@ public class NowPlayingMovies extends UseCase<NowPlayingMovies.Request, List<Mov
         }
 
         public static Request firstPage() {
-            return new Request(1);
+            return page(1);
         }
 
         public static Request page(int page) {

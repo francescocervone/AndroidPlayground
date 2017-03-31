@@ -35,8 +35,8 @@ public class DbSearchMoviesCache implements SearchMoviesCache {
     }
 
     @Override
-    public synchronized List<Movie> get(String query) throws CacheMissException {
-        List<Movie> movies = new ArrayList<>();
+    public synchronized List<List<Movie>> get(String query) throws CacheMissException {
+        List<List<Movie>> movies = new ArrayList<>();
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
         Cursor cursor = database.query(SearchMoviewDbHelper.TABLE_NAME,
                 new String[]{SearchMoviewDbHelper.COLUMN_PAGE_BODY},
@@ -47,7 +47,7 @@ public class DbSearchMoviesCache implements SearchMoviesCache {
             String json = cursor.getString(bodyIndex);
             List<Movie> page = mGson.fromJson(json, new TypeToken<List<Movie>>() {
             }.getType());
-            movies.addAll(page);
+            movies.add(page);
         }
         cursor.close();
         database.close();

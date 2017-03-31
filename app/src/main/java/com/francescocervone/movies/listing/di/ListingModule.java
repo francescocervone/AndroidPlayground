@@ -2,13 +2,11 @@ package com.francescocervone.movies.listing.di;
 
 import com.francescocervone.movies.domain.MoviesRepository;
 import com.francescocervone.movies.domain.UseCase;
-import com.francescocervone.movies.domain.model.Movie;
+import com.francescocervone.movies.domain.model.MoviesPage;
 import com.francescocervone.movies.domain.usecases.NowPlayingMovies;
 import com.francescocervone.movies.domain.usecases.SearchMovies;
 import com.francescocervone.movies.listing.MoviesActivity;
 import com.francescocervone.movies.listing.mvp.MoviesContract;
-
-import java.util.List;
 
 import javax.inject.Named;
 
@@ -49,7 +47,7 @@ public class ListingModule {
 
     @Provides
     @ListingScope
-    public UseCase<NowPlayingMovies.Request, List<Movie>> provideNowPlayingUseCase(
+    public UseCase<NowPlayingMovies.Request, MoviesPage> provideNowPlayingUseCase(
             @Named("executionScheduler") Scheduler executionScheduler,
             @Named("postExecutionScheduler") Scheduler postExecutionScheduler,
             MoviesRepository repository) {
@@ -58,7 +56,7 @@ public class ListingModule {
 
     @Provides
     @ListingScope
-    public UseCase<SearchMovies.Request, List<Movie>> provideSearchMoviesUseCase(
+    public UseCase<SearchMovies.Request, MoviesPage> provideSearchMoviesUseCase(
             @Named("executionScheduler") Scheduler executionScheduler,
             @Named("postExecutionScheduler") Scheduler postExecutionScheduler,
             MoviesRepository repository) {

@@ -3,19 +3,16 @@ package com.francescocervone.movies.domain.usecases;
 
 import com.francescocervone.movies.domain.CacheMissException;
 import com.francescocervone.movies.domain.MoviesRepository;
-import com.francescocervone.movies.domain.UseCase;
-import com.francescocervone.movies.domain.model.Movie;
+import com.francescocervone.movies.domain.model.MoviesPage;
 
 import org.reactivestreams.Publisher;
-
-import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
-public class SearchMovies extends UseCase<SearchMovies.Request, List<Movie>> {
+public class SearchMovies extends MoviesUseCase<SearchMovies.Request> {
 
     private MoviesRepository mRepository;
 
@@ -27,12 +24,13 @@ public class SearchMovies extends UseCase<SearchMovies.Request, List<Movie>> {
     }
 
     @Override
-    protected Flowable<List<Movie>> observable(final Request params) {
+    protected Flowable<MoviesPage> observable(final Request params) {
         if (params.mFromCache) {
             return mRepository.getMoviesCache(params.mQuery)
-                    .onErrorResumeNext(new Function<Throwable, Publisher<? extends List<Movie>>>() {
+                    .map(mapListOfPagesToSinglePage())
+                    .onErrorResumeNext(new Function<Throwable, Publisher<? extends MoviesPage>>() {
                         @Override
-                        public Publisher<? extends List<Movie>> apply(@NonNull Throwable throwable) throws Exception {
+                        public Publisher<? extends MoviesPage> apply(@NonNull Throwable throwable) throws Exception {
                             if (throwable instanceof CacheMissException) {
                                 return observable(Request.from(params.mQuery));
                             }
@@ -40,7 +38,8 @@ public class SearchMovies extends UseCase<SearchMovies.Request, List<Movie>> {
                         }
                     });
         }
-        return mRepository.getMovies(params.mQuery, params.mPage);
+        return mRepository.getMovies(params.mQuery, params.mPage)
+                .map(mapPage(params.mPage));
     }
 
     public static class Request {

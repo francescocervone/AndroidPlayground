@@ -51,9 +51,8 @@ public class DefaultMoviesRepository implements MoviesRepository {
     }
 
     @Override
-    public Flowable<List<Movie>> getNowPlayingMoviesCache() {
-        return Flowable.fromCallable(mNowPlayingMoviesCache::get)
-                .concatMap(Flowable::fromIterable);
+    public Flowable<List<List<Movie>>> getNowPlayingMoviesCache() {
+        return Flowable.fromCallable(mNowPlayingMoviesCache::get);
     }
 
     @Override
@@ -67,7 +66,7 @@ public class DefaultMoviesRepository implements MoviesRepository {
     }
 
     @Override
-    public Flowable<List<Movie>> getMoviesCache(String query) {
+    public Flowable<List<List<Movie>>> getMoviesCache(String query) {
         return Flowable.fromCallable(() -> mSearchMoviesCache.get(query));
     }
 

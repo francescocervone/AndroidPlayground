@@ -11,7 +11,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
     private int mPreviousTotalItemCount = 0;
     private boolean mLoading = true;
 
-    RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public EndlessScrollListener(LinearLayoutManager layoutManager) {
         this.mLayoutManager = layoutManager;
