@@ -14,16 +14,16 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
     private RecyclerView.LayoutManager mLayoutManager;
 
     public EndlessScrollListener(LinearLayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
+        mLayoutManager = layoutManager;
     }
 
     public EndlessScrollListener(GridLayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
+        mLayoutManager = layoutManager;
         mVisibleThreshold = mVisibleThreshold * layoutManager.getSpanCount();
     }
 
     public EndlessScrollListener(StaggeredGridLayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
+        mLayoutManager = layoutManager;
         mVisibleThreshold = mVisibleThreshold * layoutManager.getSpanCount();
     }
 
@@ -55,9 +55,9 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
         }
 
         if (totalItemCount < mPreviousTotalItemCount) {
-            this.mPreviousTotalItemCount = totalItemCount;
+            mPreviousTotalItemCount = totalItemCount;
             if (totalItemCount == 0) {
-                this.mLoading = true;
+                mLoading = true;
             }
         }
 
@@ -73,8 +73,12 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
     }
 
     public void resetState() {
-        this.mPreviousTotalItemCount = 0;
-        this.mLoading = true;
+        mPreviousTotalItemCount = 0;
+        mLoading = true;
+    }
+    
+    public void stopLoading() {
+        mLoading = false;
     }
 
     public abstract void onLoadMore();

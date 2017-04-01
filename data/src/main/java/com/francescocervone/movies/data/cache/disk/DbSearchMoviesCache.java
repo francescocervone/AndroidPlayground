@@ -51,6 +51,9 @@ public class DbSearchMoviesCache implements SearchMoviesCache {
         }
         cursor.close();
         database.close();
+        if (movies.isEmpty()) {
+            throw new CacheMissException();
+        }
         return movies;
     }
 

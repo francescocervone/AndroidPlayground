@@ -50,6 +50,9 @@ public class DbNowPlayingMoviesCache implements NowPlayingMoviesCache {
         }
         cursor.close();
         database.close();
+        if (pages.isEmpty()) {
+            throw new CacheMissException();
+        }
         return pages;
     }
 

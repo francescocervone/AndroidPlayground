@@ -3,6 +3,7 @@ package com.francescocervone.movies.listing;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
@@ -56,6 +57,8 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
 
         setupPresenter();
 
+        setupEmptyView();
+
         mPresenter.start();
         if (savedInstanceState == null) {
             mPresenter.load();
@@ -103,6 +106,10 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
         listingComponent.inject(this);
     }
 
+    private void setupEmptyView() {
+        mBinding.emptyView.setOnClickListener(view -> mPresenter.load());
+    }
+
     @NonNull
     private String getQuery() {
         return mBinding.searchView.getQuery().toString();
@@ -130,9 +137,9 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     }
 
     @Override
-    public void showContentError() {
+    public void showContentError(MoviesContract.ErrorType errorType) {
         mBinding.emptyView.setVisibility(View.VISIBLE);
-        mBinding.emptyView.setText(R.string.generic_error);
+        mBinding.emptyView.setText(getErrorMessage(errorType));
     }
 
     @Override
@@ -173,8 +180,10 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     }
 
     @Override
-    public void showListError() {
-
+    public void showListError(MoviesContract.ErrorType errorType) {
+        int error = getErrorMessage(errorType);
+        Snackbar.make(mBinding.recyclerView, error, Snackbar.LENGTH_LONG).show();
+        mScrollListener.resetState();
     }
 
     @Override
@@ -204,5 +213,9 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.stop();
+    }
+
+    private int getErrorMessage(MoviesContract.ErrorType errorType) {
+        return errorType == MoviesContract.ErrorType.NETWORK ? R.string.network_error : R.string.generic_error;
     }
 }

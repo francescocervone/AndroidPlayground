@@ -13,7 +13,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.francescocervone.movies.common.TextUtils.isEmpty;
 
-public class Presenter implements MovieDetailsContract.Presenter {
+public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     public static final String DEFAULT_SEPARATOR = ", ";
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
@@ -22,7 +22,7 @@ public class Presenter implements MovieDetailsContract.Presenter {
     private String mMovieId;
 
     @Inject
-    public Presenter(
+    public MovieDetailsPresenter(
             UseCase<FetchMovieDetails.Request, MovieDetails> useCase,
             MovieDetailsContract.View view,
             String movieId) {

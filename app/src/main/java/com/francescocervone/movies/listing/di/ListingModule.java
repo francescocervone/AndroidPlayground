@@ -7,6 +7,7 @@ import com.francescocervone.movies.domain.usecases.NowPlayingMovies;
 import com.francescocervone.movies.domain.usecases.SearchMovies;
 import com.francescocervone.movies.listing.MoviesActivity;
 import com.francescocervone.movies.listing.mvp.MoviesContract;
+import com.francescocervone.movies.listing.mvp.MoviesPresenter;
 
 import javax.inject.Named;
 
@@ -66,6 +67,6 @@ public class ListingModule {
     @Module
     public interface Presenter {
         @Binds
-        MoviesContract.Presenter providePresenter(com.francescocervone.movies.listing.mvp.Presenter presenter);
+        MoviesContract.Presenter providePresenter(MoviesPresenter presenter);
     }
 }

@@ -92,6 +92,6 @@ public class DefaultMoviesRepository implements MoviesRepository {
     }
 
     private boolean isFirstPage(int page) {
-        return page == 0;
+        return page == 1;
     }
 }

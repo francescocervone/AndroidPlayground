@@ -18,7 +18,7 @@ public interface MoviesContract {
 
         void hideEmptyView();
 
-        void showContentError();
+        void showContentError(ErrorType errorType);
 
         void hideContentError();
 
@@ -34,7 +34,7 @@ public interface MoviesContract {
 
         void hideListLoader();
 
-        void showListError();
+        void showListError(ErrorType errorType);
 
         Flowable<String> observeQuery();
 
@@ -49,5 +49,10 @@ public interface MoviesContract {
         void loadMore();
 
         void restore(String query);
+    }
+
+    enum ErrorType {
+        GENERIC,
+        NETWORK
     }
 }

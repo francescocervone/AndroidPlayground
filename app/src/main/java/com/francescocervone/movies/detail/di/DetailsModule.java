@@ -1,6 +1,7 @@
 package com.francescocervone.movies.detail.di;
 
 import com.francescocervone.movies.detail.mvp.MovieDetailsContract;
+import com.francescocervone.movies.detail.mvp.MovieDetailsPresenter;
 import com.francescocervone.movies.domain.MoviesRepository;
 import com.francescocervone.movies.domain.UseCase;
 import com.francescocervone.movies.domain.model.MovieDetails;
@@ -63,6 +64,6 @@ public class DetailsModule {
     @Module
     public interface Presenter {
         @Binds
-        MovieDetailsContract.Presenter providePresenter(com.francescocervone.movies.detail.mvp.Presenter presenter);
+        MovieDetailsContract.Presenter providePresenter(MovieDetailsPresenter presenter);
     }
 }
