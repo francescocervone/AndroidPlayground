@@ -8,11 +8,11 @@ import com.francescocervone.movies.data.DefaultMoviesRepository;
 import com.francescocervone.movies.data.cache.MovieDetailsCache;
 import com.francescocervone.movies.data.cache.NowPlayingMoviesCache;
 import com.francescocervone.movies.data.cache.SearchMoviesCache;
-import com.francescocervone.movies.data.cache.disk.DbNowPlayingMoviesCache;
-import com.francescocervone.movies.data.cache.disk.DbSearchMoviesCache;
+import com.francescocervone.movies.data.cache.disk.MovieDetailsDiskCache;
 import com.francescocervone.movies.data.cache.disk.NowPlayingMoviesDbHelper;
+import com.francescocervone.movies.data.cache.disk.NowPlayingMoviesDiskCache;
+import com.francescocervone.movies.data.cache.disk.SearchMoviesDiskCache;
 import com.francescocervone.movies.data.cache.disk.SearchMoviewDbHelper;
-import com.francescocervone.movies.data.cache.memory.InMemoryMovieDetailsCache;
 import com.francescocervone.movies.data.mapper.MovieMapper;
 import com.francescocervone.movies.domain.MoviesRepository;
 
@@ -38,7 +38,7 @@ public class MoviesModule {
     @Provides
     @Singleton
     public NowPlayingMoviesCache provideNowPlayingCache(NowPlayingMoviesDbHelper dbHelper) {
-        return new DbNowPlayingMoviesCache(dbHelper);
+        return new NowPlayingMoviesDiskCache(dbHelper);
     }
 
     @Provides
@@ -50,13 +50,13 @@ public class MoviesModule {
     @Provides
     @Singleton
     public SearchMoviesCache provideSearchCache(SearchMoviewDbHelper dbHelper) {
-        return new DbSearchMoviesCache(dbHelper);
+        return new SearchMoviesDiskCache(dbHelper);
     }
 
     @Provides
     @Singleton
-    public MovieDetailsCache provideMovieDetailsCache() {
-        return new InMemoryMovieDetailsCache();
+    public MovieDetailsCache provideMovieDetailsCache(Context context) {
+        return new MovieDetailsDiskCache(context);
     }
 
     @Provides

@@ -7,7 +7,7 @@ import com.francescocervone.movies.data.cache.MovieDetailsCache;
 import com.francescocervone.movies.domain.exceptions.CacheMissException;
 import com.francescocervone.movies.domain.model.MovieDetails;
 
-public class InMemoryMovieDetailsCache implements MovieDetailsCache {
+public class MovieDetailsInMemoryCache implements MovieDetailsCache {
     private LruCache<String, MovieDetails> mCache = new LruCache<>(20);
 
     @Override
@@ -26,6 +26,6 @@ public class InMemoryMovieDetailsCache implements MovieDetailsCache {
 
     @Override
     public void clear() {
-        mCache.evictAll();
+        // No-op: this is an LRU cache
     }
 }

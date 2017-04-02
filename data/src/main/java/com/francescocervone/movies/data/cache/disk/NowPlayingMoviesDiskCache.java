@@ -18,11 +18,11 @@ import static com.francescocervone.movies.data.cache.disk.NowPlayingMoviesDbHelp
 import static com.francescocervone.movies.data.cache.disk.NowPlayingMoviesDbHelper.COLUMN_PAGE_BODY;
 import static com.francescocervone.movies.data.cache.disk.NowPlayingMoviesDbHelper.TABLE_NAME;
 
-public class DbNowPlayingMoviesCache implements NowPlayingMoviesCache {
+public class NowPlayingMoviesDiskCache implements NowPlayingMoviesCache {
     private final Gson mGson;
     private NowPlayingMoviesDbHelper mDbHelper;
 
-    public DbNowPlayingMoviesCache(NowPlayingMoviesDbHelper dbHelper) {
+    public NowPlayingMoviesDiskCache(NowPlayingMoviesDbHelper dbHelper) {
         mDbHelper = dbHelper;
         mGson = new Gson();
     }

@@ -12,12 +12,12 @@ import io.reactivex.Scheduler;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
-public class NowPlayingMovies extends MoviesUseCase<NowPlayingMovies.Request> {
+public class FetchNowPlayingMovies extends MoviesUseCase<FetchNowPlayingMovies.Request> {
     private final MoviesRepository mRepository;
 
-    public NowPlayingMovies(Scheduler executionScheduler,
-                            Scheduler postExecutionScheduler,
-                            MoviesRepository repository) {
+    public FetchNowPlayingMovies(Scheduler executionScheduler,
+                                 Scheduler postExecutionScheduler,
+                                 MoviesRepository repository) {
         super(executionScheduler, postExecutionScheduler);
         mRepository = repository;
     }

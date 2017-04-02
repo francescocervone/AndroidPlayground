@@ -6,7 +6,7 @@ import com.francescocervone.movies.domain.exceptions.BadRequestException;
 import com.francescocervone.movies.domain.exceptions.NetworkException;
 import com.francescocervone.movies.domain.exceptions.ServiceUnavailableException;
 import com.francescocervone.movies.domain.model.MoviesPage;
-import com.francescocervone.movies.domain.usecases.NowPlayingMovies;
+import com.francescocervone.movies.domain.usecases.FetchNowPlayingMovies;
 import com.francescocervone.movies.domain.usecases.SearchMovies;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private CompositeDisposable mRequestsCompositeDisposable = new CompositeDisposable();
     private CompositeDisposable mViewCompositeDisposable = new CompositeDisposable();
 
-    private UseCase<NowPlayingMovies.Request, MoviesPage> mNowPlayingMovies;
+    private UseCase<FetchNowPlayingMovies.Request, MoviesPage> mNowPlayingMovies;
     private UseCase<SearchMovies.Request, MoviesPage> mSearchMovies;
     private MoviesContract.View mView;
 
@@ -28,7 +28,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private String mQuery;
 
     @Inject
-    public MoviesPresenter(UseCase<NowPlayingMovies.Request, MoviesPage> nowPlayingMovies,
+    public MoviesPresenter(UseCase<FetchNowPlayingMovies.Request, MoviesPage> nowPlayingMovies,
                            UseCase<SearchMovies.Request, MoviesPage> searchMovies,
                            MoviesContract.View view) {
         mNowPlayingMovies = nowPlayingMovies;
@@ -58,7 +58,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
         Flowable<MoviesPage> firstPageFlowable;
         if (isEmpty(query)) {
-            NowPlayingMovies.Request request = NowPlayingMovies.Request.firstPage();
+            FetchNowPlayingMovies.Request request = FetchNowPlayingMovies.Request.firstPage();
             firstPageFlowable = mNowPlayingMovies.execute(request);
         } else {
             SearchMovies.Request request = SearchMovies.Request.from(query);
@@ -77,7 +77,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
         Flowable<MoviesPage> nextPageFlowable;
         if (isEmpty(mQuery)) {
-            nextPageFlowable = mNowPlayingMovies.execute(NowPlayingMovies.Request.page(++mCurrentPage));
+            nextPageFlowable = mNowPlayingMovies.execute(FetchNowPlayingMovies.Request.page(++mCurrentPage));
         } else {
             nextPageFlowable = mSearchMovies.execute(SearchMovies.Request.from(mQuery, ++mCurrentPage));
         }
@@ -94,7 +94,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
         Flowable<MoviesPage> restoreFlowable;
         if (isEmpty(query)) {
-            restoreFlowable = mNowPlayingMovies.execute(NowPlayingMovies.Request.fromCache());
+            restoreFlowable = mNowPlayingMovies.execute(FetchNowPlayingMovies.Request.fromCache());
         } else {
             restoreFlowable = mSearchMovies.execute(SearchMovies.Request.fromCache(query));
         }

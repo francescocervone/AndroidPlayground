@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class InMemorySearchMoviesCache implements SearchMoviesCache {
+public class SearchMoviesInMemoryCache implements SearchMoviesCache {
     private Map<String, SortedMap<Integer, List<Movie>>> mSearchesCache = new HashMap<>();
 
     @Override

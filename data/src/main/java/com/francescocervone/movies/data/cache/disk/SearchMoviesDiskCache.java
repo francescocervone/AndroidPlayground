@@ -14,11 +14,11 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbSearchMoviesCache implements SearchMoviesCache {
+public class SearchMoviesDiskCache implements SearchMoviesCache {
     private SearchMoviewDbHelper mDbHelper;
     private final Gson mGson;
 
-    public DbSearchMoviesCache(SearchMoviewDbHelper dbHelper) {
+    public SearchMoviesDiskCache(SearchMoviewDbHelper dbHelper) {
         mDbHelper = dbHelper;
         mGson = new Gson();
     }
