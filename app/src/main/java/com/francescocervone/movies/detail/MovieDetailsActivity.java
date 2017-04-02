@@ -12,6 +12,7 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.francescocervone.movies.Movies;
 import com.francescocervone.movies.R;
+import com.francescocervone.movies.common.mvp.ErrorType;
 import com.francescocervone.movies.databinding.ActivityMovieDetailsBinding;
 import com.francescocervone.movies.detail.di.DaggerDetailsComponent;
 import com.francescocervone.movies.detail.di.DetailsModule;
@@ -194,9 +195,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     }
 
     @Override
-    public void showError() {
+    public void showError(ErrorType errorType) {
         mBinding.viewAnimator.setDisplayedChild(EMPTY_VIEW_CHILD_INDEX);
-        mBinding.emptyView.setText(R.string.generic_error);
+        mBinding.emptyView.setText(getErrorMessage(errorType));
     }
 
     @Override
@@ -211,5 +212,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.stop();
+    }
+
+    private int getErrorMessage(ErrorType errorType) {
+        switch (errorType) {
+            case SERVICE_UNAVAILABLE:
+                return R.string.service_unavailable;
+            case NETWORK:
+                return R.string.network_error;
+            case GENERIC:
+            case BAD_REQUEST:
+            default:
+                return R.string.generic_error;
+        }
     }
 }

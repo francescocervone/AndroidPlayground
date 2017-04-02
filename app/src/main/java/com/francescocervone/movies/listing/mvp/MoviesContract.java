@@ -1,6 +1,7 @@
 package com.francescocervone.movies.listing.mvp;
 
 
+import com.francescocervone.movies.common.mvp.ErrorType;
 import com.francescocervone.movies.domain.model.Movie;
 import com.francescocervone.movies.common.mvp.BasePresenter;
 
@@ -51,10 +52,4 @@ public interface MoviesContract {
         void restore(String query);
     }
 
-    enum ErrorType {
-        GENERIC,
-        BAD_REQUEST,
-        SERVICE_UNAVAILABLE,
-        NETWORK
-    }
 }

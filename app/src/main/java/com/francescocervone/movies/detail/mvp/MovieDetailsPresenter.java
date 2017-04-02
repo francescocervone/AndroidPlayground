@@ -2,6 +2,7 @@ package com.francescocervone.movies.detail.mvp;
 
 
 import com.francescocervone.movies.common.TextUtils;
+import com.francescocervone.movies.common.mvp.ErrorType;
 import com.francescocervone.movies.domain.UseCase;
 import com.francescocervone.movies.domain.model.MovieDetails;
 import com.francescocervone.movies.domain.usecases.FetchMovieDetails;
@@ -36,7 +37,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
         mView.showLoader();
         Disposable disposable = mUseCase.execute(FetchMovieDetails.Request.fromId(mMovieId))
                 .subscribe(this::feedView, throwable -> {
-                    mView.showError();
+                    mView.showError(ErrorType.fromThrowable(throwable));
                     throwable.printStackTrace();
                 }, () -> mView.showContent());
         mCompositeDisposable.add(disposable);

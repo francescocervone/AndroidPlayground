@@ -1,10 +1,8 @@
 package com.francescocervone.movies.listing.mvp;
 
 
+import com.francescocervone.movies.common.mvp.ErrorType;
 import com.francescocervone.movies.domain.UseCase;
-import com.francescocervone.movies.domain.exceptions.BadRequestException;
-import com.francescocervone.movies.domain.exceptions.NetworkException;
-import com.francescocervone.movies.domain.exceptions.ServiceUnavailableException;
 import com.francescocervone.movies.domain.model.MoviesPage;
 import com.francescocervone.movies.domain.usecases.FetchNowPlayingMovies;
 import com.francescocervone.movies.domain.usecases.SearchMovies;
@@ -135,24 +133,13 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private void handleError(Throwable throwable) {
         throwable.printStackTrace();
         mView.hideContentLoader();
-        mView.showContentError(getError(throwable));
+        mView.showContentError(ErrorType.fromThrowable(throwable));
     }
 
     private void handleListError(Throwable throwable) {
         throwable.printStackTrace();
-        mView.showListError(getError(throwable));
+        mView.showListError(ErrorType.fromThrowable(throwable));
         mView.hideListLoader();
-    }
-
-    private MoviesContract.ErrorType getError(Throwable throwable) {
-        if (throwable instanceof NetworkException) {
-            return MoviesContract.ErrorType.NETWORK;
-        } else if (throwable instanceof BadRequestException) {
-            return MoviesContract.ErrorType.BAD_REQUEST;
-        } else if (throwable instanceof ServiceUnavailableException) {
-            return MoviesContract.ErrorType.SERVICE_UNAVAILABLE;
-        }
-        return MoviesContract.ErrorType.GENERIC;
     }
 
     @Override

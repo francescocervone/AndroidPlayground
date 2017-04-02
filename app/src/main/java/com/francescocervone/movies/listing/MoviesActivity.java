@@ -12,6 +12,7 @@ import android.view.View;
 import com.francescocervone.movies.Movies;
 import com.francescocervone.movies.R;
 import com.francescocervone.movies.common.EndlessScrollListener;
+import com.francescocervone.movies.common.mvp.ErrorType;
 import com.francescocervone.movies.databinding.ActivityMoviesBinding;
 import com.francescocervone.movies.detail.MovieDetailsActivity;
 import com.francescocervone.movies.domain.model.Movie;
@@ -137,7 +138,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     }
 
     @Override
-    public void showContentError(MoviesContract.ErrorType errorType) {
+    public void showContentError(ErrorType errorType) {
         mBinding.emptyView.setVisibility(View.VISIBLE);
         mBinding.emptyView.setText(getErrorMessage(errorType));
     }
@@ -180,7 +181,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     }
 
     @Override
-    public void showListError(MoviesContract.ErrorType errorType) {
+    public void showListError(ErrorType errorType) {
         int error = getErrorMessage(errorType);
         Snackbar.make(mBinding.recyclerView, error, Snackbar.LENGTH_LONG).show();
         mScrollListener.resetState();
@@ -215,7 +216,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
         mPresenter.stop();
     }
 
-    private int getErrorMessage(MoviesContract.ErrorType errorType) {
+    private int getErrorMessage(ErrorType errorType) {
         switch (errorType) {
             case SERVICE_UNAVAILABLE:
                 return R.string.service_unavailable;

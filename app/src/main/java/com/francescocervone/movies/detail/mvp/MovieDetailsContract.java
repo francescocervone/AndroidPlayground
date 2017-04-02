@@ -2,6 +2,7 @@ package com.francescocervone.movies.detail.mvp;
 
 
 import com.francescocervone.movies.common.mvp.BasePresenter;
+import com.francescocervone.movies.common.mvp.ErrorType;
 
 public interface MovieDetailsContract {
     interface View {
@@ -47,7 +48,7 @@ public interface MovieDetailsContract {
 
         void showContent();
 
-        void showError();
+        void showError(ErrorType errorType);
     }
 
     interface Presenter extends BasePresenter {
