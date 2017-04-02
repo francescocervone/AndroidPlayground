@@ -86,9 +86,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     }
 
     public void clear() {
-        int oldSize = mMovies.size();
         mMovies.clear();
-        notifyItemRangeRemoved(0, oldSize);
+        notifyDataSetChanged();
     }
 
     public void addAll(List<Movie> movies) {

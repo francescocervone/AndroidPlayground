@@ -35,131 +35,139 @@
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
-        <ViewAnimator
-            android:id="@+id/view_animator"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:animateLayoutChanges="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:id="@+id/empty_view"
+            <ViewAnimator
+                android:id="@+id/view_animator"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="36sp"
-                android:textStyle="bold"/>
+                android:animateLayoutChanges="true">
 
-            <android.support.v4.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ProgressBar
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_gravity="center"/>
 
-                    <TextView
-                        android:id="@+id/tagline"
-                        style="@style/Movies.TextAppearance.Tagline"
+                <TextView
+                    android:id="@+id/empty_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="36sp"
+                    android:textStyle="bold"/>
+
+
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="8dp"/>
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                    <TextView
-                        android:id="@+id/overview"
-                        style="@style/Movies.TextAppearance.Overview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="8dp"
-                        android:paddingTop="8dp"/>
+                        <TextView
+                            android:id="@+id/tagline"
+                            style="@style/Movies.TextAppearance.Tagline"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"/>
 
-                    <TextView
-                        android:id="@+id/genres_label"
-                        style="@style/Movies.TextAppearance.Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
-                        android:text="Genres"/>
+                        <TextView
+                            android:id="@+id/overview"
+                            style="@style/Movies.TextAppearance.Overview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp"/>
 
-                    <TextView
-                        android:id="@+id/genres"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        <TextView
+                            android:id="@+id/genres_label"
+                            style="@style/Movies.TextAppearance.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"
+                            android:text="Genres"/>
 
-                    <TextView
-                        android:id="@+id/companies_label"
-                        style="@style/Movies.TextAppearance.Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
-                        android:text="Production companies"/>
+                        <TextView
+                            android:id="@+id/genres"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
 
-                    <TextView
-                        android:id="@+id/companies"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        <TextView
+                            android:id="@+id/companies_label"
+                            style="@style/Movies.TextAppearance.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"
+                            android:text="Production companies"/>
 
-                    <TextView
-                        android:id="@+id/countries_label"
-                        style="@style/Movies.TextAppearance.Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
-                        android:text="Production countries"/>
+                        <TextView
+                            android:id="@+id/companies"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
 
-                    <TextView
-                        android:id="@+id/countries"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        <TextView
+                            android:id="@+id/countries_label"
+                            style="@style/Movies.TextAppearance.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"
+                            android:text="Production countries"/>
 
-                    <TextView
-                        android:id="@+id/languages_label"
-                        style="@style/Movies.TextAppearance.Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
-                        android:text="Spoken languages"/>
+                        <TextView
+                            android:id="@+id/countries"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
 
-                    <TextView
-                        android:id="@+id/languages"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        <TextView
+                            android:id="@+id/languages_label"
+                            style="@style/Movies.TextAppearance.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"
+                            android:text="Spoken languages"/>
 
-                    <TextView
-                        android:id="@+id/vote_avg_label"
-                        style="@style/Movies.TextAppearance.Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
-                        android:text="Vote average"/>
+                        <TextView
+                            android:id="@+id/languages"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
 
-                    <TextView
-                        android:id="@+id/vote_avg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        <TextView
+                            android:id="@+id/vote_avg_label"
+                            style="@style/Movies.TextAppearance.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"
+                            android:text="Vote average"/>
 
-                    <TextView
-                        android:id="@+id/vote_count_label"
-                        style="@style/Movies.TextAppearance.Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
-                        android:text="Vote count"/>
+                        <TextView
+                            android:id="@+id/vote_avg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
 
-                    <TextView
-                        android:id="@+id/vote_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-            </android.support.v4.widget.NestedScrollView>
-        </ViewAnimator>
+                        <TextView
+                            android:id="@+id/vote_count_label"
+                            style="@style/Movies.TextAppearance.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"
+                            android:text="Vote count"/>
+
+                        <TextView
+                            android:id="@+id/vote_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </android.support.v4.widget.NestedScrollView>
+            </ViewAnimator>
+        </android.support.v4.widget.SwipeRefreshLayout>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

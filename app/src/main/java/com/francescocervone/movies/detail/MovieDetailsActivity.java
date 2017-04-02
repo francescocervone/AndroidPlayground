@@ -45,6 +45,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
 
         setupToolbar();
 
+        setupSwipeRefreshLayout();
+
         setupPresenter();
 
         mPresenter.start();
@@ -57,6 +59,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(null);
         }
+    }
+
+    private void setupSwipeRefreshLayout() {
+        mBinding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            mBinding.swipeRefreshLayout.setRefreshing(false);
+            mPresenter.start();
+        });
     }
 
     private void setupPresenter() {
@@ -187,17 +196,20 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     @Override
     public void showLoader() {
         mBinding.viewAnimator.setDisplayedChild(PROGRESS_CHILD_INDEX);
+        mBinding.swipeRefreshLayout.setEnabled(false);
     }
 
     @Override
     public void showContent() {
         mBinding.viewAnimator.setDisplayedChild(CONTENT_CHILD_INDEX);
+        mBinding.swipeRefreshLayout.setEnabled(true);
     }
 
     @Override
     public void showError(ErrorType errorType) {
         mBinding.viewAnimator.setDisplayedChild(EMPTY_VIEW_CHILD_INDEX);
         mBinding.emptyView.setText(getErrorMessage(errorType));
+        mBinding.swipeRefreshLayout.setEnabled(true);
     }
 
     @Override

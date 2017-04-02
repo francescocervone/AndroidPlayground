@@ -52,13 +52,13 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
 
         setSupportActionBar(mBinding.toolbar);
 
+        setupPresenter();
+
         setupRecyclerView();
 
         setupSearchView();
 
-        setupPresenter();
-
-        setupEmptyView();
+        setupSwipeRefreshLayout();
 
         mPresenter.start();
         if (savedInstanceState == null) {
@@ -66,6 +66,14 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
         } else {
             mPresenter.restore(savedInstanceState.getString(KEY_QUERY));
         }
+    }
+
+    private void setupPresenter() {
+        ListingComponent listingComponent = DaggerListingComponent.builder()
+                .applicationComponent(Movies.from(this).getApplicationComponent())
+                .listingModule(new ListingModule(this))
+                .build();
+        listingComponent.inject(this);
     }
 
     private void setupRecyclerView() {
@@ -99,16 +107,11 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
         });
     }
 
-    private void setupPresenter() {
-        ListingComponent listingComponent = DaggerListingComponent.builder()
-                .applicationComponent(Movies.from(this).getApplicationComponent())
-                .listingModule(new ListingModule(this))
-                .build();
-        listingComponent.inject(this);
-    }
-
-    private void setupEmptyView() {
-        mBinding.emptyView.setOnClickListener(view -> mPresenter.load());
+    private void setupSwipeRefreshLayout() {
+        mBinding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            mBinding.swipeRefreshLayout.setRefreshing(false);
+            mPresenter.load();
+        });
     }
 
     @NonNull
@@ -119,11 +122,13 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     @Override
     public void showContentLoader() {
         mBinding.progress.setVisibility(View.VISIBLE);
+        mBinding.swipeRefreshLayout.setEnabled(false);
     }
 
     @Override
     public void hideContentLoader() {
         mBinding.progress.setVisibility(View.GONE);
+        mBinding.swipeRefreshLayout.setEnabled(true);
     }
 
     @Override
@@ -152,7 +157,6 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     public void clearMovies() {
         mAdapter.clear();
         mScrollListener.resetState();
-        mBinding.recyclerView.scrollToPosition(0);
     }
 
     @Override
