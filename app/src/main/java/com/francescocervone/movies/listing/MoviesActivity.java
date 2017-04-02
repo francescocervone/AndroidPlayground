@@ -216,6 +216,15 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     }
 
     private int getErrorMessage(MoviesContract.ErrorType errorType) {
-        return errorType == MoviesContract.ErrorType.NETWORK ? R.string.network_error : R.string.generic_error;
+        switch (errorType) {
+            case SERVICE_UNAVAILABLE:
+                return R.string.service_unavailable;
+            case NETWORK:
+                return R.string.network_error;
+            case GENERIC:
+            case BAD_REQUEST:
+            default:
+                return R.string.generic_error;
+        }
     }
 }

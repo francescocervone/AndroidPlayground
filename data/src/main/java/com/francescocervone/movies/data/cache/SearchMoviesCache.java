@@ -1,7 +1,7 @@
 package com.francescocervone.movies.data.cache;
 
 
-import com.francescocervone.movies.domain.CacheMissException;
+import com.francescocervone.movies.domain.exceptions.CacheMissException;
 import com.francescocervone.movies.domain.model.Movie;
 
 import java.util.List;

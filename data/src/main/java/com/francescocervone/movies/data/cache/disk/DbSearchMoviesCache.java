@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.francescocervone.movies.data.cache.SearchMoviesCache;
-import com.francescocervone.movies.domain.CacheMissException;
+import com.francescocervone.movies.domain.exceptions.CacheMissException;
 import com.francescocervone.movies.domain.model.Movie;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

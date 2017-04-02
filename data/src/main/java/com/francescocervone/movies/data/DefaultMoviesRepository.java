@@ -8,7 +8,7 @@ import com.francescocervone.movies.data.cache.NowPlayingMoviesCache;
 import com.francescocervone.movies.data.cache.SearchMoviesCache;
 import com.francescocervone.movies.data.entities.MoviesPageEntity;
 import com.francescocervone.movies.data.mapper.MovieMapper;
-import com.francescocervone.movies.domain.CacheMissException;
+import com.francescocervone.movies.domain.exceptions.CacheMissException;
 import com.francescocervone.movies.domain.MoviesRepository;
 import com.francescocervone.movies.domain.model.Movie;
 import com.francescocervone.movies.domain.model.MovieDetails;

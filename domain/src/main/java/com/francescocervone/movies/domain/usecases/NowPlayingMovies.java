@@ -1,7 +1,7 @@
 package com.francescocervone.movies.domain.usecases;
 
 
-import com.francescocervone.movies.domain.CacheMissException;
+import com.francescocervone.movies.domain.exceptions.CacheMissException;
 import com.francescocervone.movies.domain.MoviesRepository;
 import com.francescocervone.movies.domain.model.MoviesPage;
 

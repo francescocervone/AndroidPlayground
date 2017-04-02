@@ -1,10 +1,15 @@
 package com.francescocervone.movies.data;
 
 
+import android.support.annotation.NonNull;
+
 import com.francescocervone.movies.data.entities.MovieDetailsEntity;
 import com.francescocervone.movies.data.entities.MoviesPageEntity;
 
+import org.reactivestreams.Publisher;
+
 import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -42,16 +47,24 @@ public class DefaultApiManager implements ApiManager {
 
     @Override
     public Flowable<MoviesPageEntity> nowPlayingMovies(int page) {
-        return mService.nowPlaying(page);
+        return mService.nowPlaying(page)
+                .onErrorResumeNext(handleError());
     }
 
     @Override
     public Flowable<MoviesPageEntity> searchMovies(String query, int page) {
-        return mService.search(query, page);
+        return mService.search(query, page)
+                .onErrorResumeNext(handleError());
     }
 
     @Override
     public Flowable<MovieDetailsEntity> movieDetails(String id) {
-        return mService.details(id);
+        return mService.details(id)
+                .onErrorResumeNext(handleError());
+    }
+
+    @NonNull
+    private <T> Function<Throwable, Publisher<? extends T>> handleError() {
+        return throwable -> Flowable.error(ErrorHandler.convert(throwable));
     }
 }

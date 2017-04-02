@@ -53,6 +53,8 @@ public interface MoviesContract {
 
     enum ErrorType {
         GENERIC,
+        BAD_REQUEST,
+        SERVICE_UNAVAILABLE,
         NETWORK
     }
 }

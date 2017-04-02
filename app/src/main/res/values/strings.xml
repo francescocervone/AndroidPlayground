@@ -2,5 +2,6 @@
     <string name="app_name">Movies</string>
     <string name="generic_error">An unexpected error has occurred</string>
     <string name="network_error">A network error has occurred. Please check your internet connection.</string>
+    <string name="service_unavailable">Service unavailable. Please try again later.</string>
     <string name="no_results">There are no results</string>
 </resources>

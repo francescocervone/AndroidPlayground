@@ -2,11 +2,12 @@ package com.francescocervone.movies.listing.mvp;
 
 
 import com.francescocervone.movies.domain.UseCase;
+import com.francescocervone.movies.domain.exceptions.BadRequestException;
+import com.francescocervone.movies.domain.exceptions.NetworkException;
+import com.francescocervone.movies.domain.exceptions.ServiceUnavailableException;
 import com.francescocervone.movies.domain.model.MoviesPage;
 import com.francescocervone.movies.domain.usecases.NowPlayingMovies;
 import com.francescocervone.movies.domain.usecases.SearchMovies;
-
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -144,8 +145,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     }
 
     private MoviesContract.ErrorType getError(Throwable throwable) {
-        if (throwable instanceof IOException) {
+        if (throwable instanceof NetworkException) {
             return MoviesContract.ErrorType.NETWORK;
+        } else if (throwable instanceof BadRequestException) {
+            return MoviesContract.ErrorType.BAD_REQUEST;
+        } else if (throwable instanceof ServiceUnavailableException) {
+            return MoviesContract.ErrorType.SERVICE_UNAVAILABLE;
         }
         return MoviesContract.ErrorType.GENERIC;
     }
