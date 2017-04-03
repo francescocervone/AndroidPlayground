@@ -72,6 +72,8 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     protected void onStart() {
         super.onStart();
 
+        // I put this in the onStart() instead of the onCreate in order to avoid to receive an event
+        // for the restored SearchView.
         setupSearchView();
     }
 
