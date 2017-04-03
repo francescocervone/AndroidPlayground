@@ -10,7 +10,6 @@ import com.francescocervone.movies.domain.usecases.FetchMovieDetails;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 import static com.francescocervone.movies.common.TextUtils.isEmpty;
 
@@ -34,13 +33,15 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
     @Override
     public void start() {
+        mCompositeDisposable.add(mView.observePullToRefresh()
+                .subscribe(o -> load()));
+        load();
+    }
+
+    private void load() {
         mView.showLoader();
-        Disposable disposable = mUseCase.execute(FetchMovieDetails.Request.fromId(mMovieId))
-                .subscribe(this::feedView, throwable -> {
-                    mView.showError(ErrorType.fromThrowable(throwable));
-                    throwable.printStackTrace();
-                }, () -> mView.showContent());
-        mCompositeDisposable.add(disposable);
+        mCompositeDisposable.add(mUseCase.execute(FetchMovieDetails.Request.fromId(mMovieId))
+                .subscribe(this::feedView, this::manageError));
     }
 
     private void feedView(MovieDetails movieDetails) {
@@ -95,6 +96,12 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
         } else {
             mView.hideVoteCount();
         }
+        mView.showContent();
+    }
+
+    private void manageError(Throwable throwable) {
+        mView.showError(ErrorType.fromThrowable(throwable));
+        throwable.printStackTrace();
     }
 
     @Override

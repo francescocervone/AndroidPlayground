@@ -42,6 +42,8 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
 
     private PublishProcessor<String> mQueryProcessor = PublishProcessor.create();
 
+    private PublishProcessor<Object> mPullToRefreshProcessor = PublishProcessor.create();
+
     @Inject
     MoviesContract.Presenter mPresenter;
 
@@ -56,8 +58,6 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
 
         setupRecyclerView();
 
-        setupSearchView();
-
         setupSwipeRefreshLayout();
 
         mPresenter.start();
@@ -66,6 +66,13 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
         } else {
             mPresenter.restore(savedInstanceState.getString(KEY_QUERY));
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        setupSearchView();
     }
 
     private void setupPresenter() {
@@ -110,7 +117,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     private void setupSwipeRefreshLayout() {
         mBinding.swipeRefreshLayout.setOnRefreshListener(() -> {
             mBinding.swipeRefreshLayout.setRefreshing(false);
-            mPresenter.load();
+            mPullToRefreshProcessor.onNext(new Object());
         });
     }
 
@@ -201,6 +208,11 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     @Override
     public Flowable<String> observeMovieClicks() {
         return mAdapter.observeMovieClicks();
+    }
+
+    @Override
+    public Flowable<?> observePullToRefresh() {
+        return mPullToRefreshProcessor;
     }
 
     @Override

@@ -20,6 +20,9 @@ import com.francescocervone.movies.detail.mvp.MovieDetailsContract;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
+import io.reactivex.processors.PublishProcessor;
+
 public class MovieDetailsActivity extends AppCompatActivity implements MovieDetailsContract.View {
 
     public static final String KEY_MOVIE_ID = "movie_id";
@@ -28,6 +31,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     public static final int CONTENT_CHILD_INDEX = 2;
 
     private ActivityMovieDetailsBinding mBinding;
+
+    private PublishProcessor<Object> mPullToRefreshProcessor = PublishProcessor.create();
 
     @Inject
     MovieDetailsContract.Presenter mPresenter;
@@ -64,7 +69,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     private void setupSwipeRefreshLayout() {
         mBinding.swipeRefreshLayout.setOnRefreshListener(() -> {
             mBinding.swipeRefreshLayout.setRefreshing(false);
-            mPresenter.start();
+            mPullToRefreshProcessor.onNext(new Object());
         });
     }
 
@@ -210,6 +215,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
         mBinding.viewAnimator.setDisplayedChild(EMPTY_VIEW_CHILD_INDEX);
         mBinding.emptyView.setText(getErrorMessage(errorType));
         mBinding.swipeRefreshLayout.setEnabled(true);
+    }
+
+    @Override
+    public Flowable<?> observePullToRefresh() {
+        return mPullToRefreshProcessor;
     }
 
     @Override

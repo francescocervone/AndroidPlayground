@@ -4,6 +4,8 @@ package com.francescocervone.movies.detail.mvp;
 import com.francescocervone.movies.common.mvp.BasePresenter;
 import com.francescocervone.movies.common.mvp.ErrorType;
 
+import io.reactivex.Flowable;
+
 public interface MovieDetailsContract {
     interface View {
         void setBackdrop(String url);
@@ -49,6 +51,8 @@ public interface MovieDetailsContract {
         void showContent();
 
         void showError(ErrorType errorType);
+
+        Flowable<?> observePullToRefresh();
     }
 
     interface Presenter extends BasePresenter {

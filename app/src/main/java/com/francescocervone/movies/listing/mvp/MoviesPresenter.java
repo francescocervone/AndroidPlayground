@@ -41,9 +41,10 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 .subscribe(this::load));
 
         mViewCompositeDisposable.add(mView.observeMovieClicks()
-                .subscribe(movieId -> {
-                    mView.openMovieDetails(movieId);
-                }));
+                .subscribe(movieId -> mView.openMovieDetails(movieId)));
+
+        mViewCompositeDisposable.add(mView.observePullToRefresh()
+                .subscribe(v -> load()));
     }
 
     @Override

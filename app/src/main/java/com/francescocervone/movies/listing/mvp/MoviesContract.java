@@ -41,6 +41,8 @@ public interface MoviesContract {
 
         Flowable<String> observeMovieClicks();
 
+        Flowable<?> observePullToRefresh();
+
         void openMovieDetails(String movieId);
     }
 

@@ -14,7 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/Movies"
         >
-        <activity android:name=".listing.MoviesActivity">
+        <activity
+            android:name=".listing.MoviesActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
