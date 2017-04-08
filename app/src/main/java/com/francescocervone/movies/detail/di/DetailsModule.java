@@ -2,7 +2,7 @@ package com.francescocervone.movies.detail.di;
 
 import com.francescocervone.movies.detail.mvp.MovieDetailsContract;
 import com.francescocervone.movies.detail.mvp.MovieDetailsPresenter;
-import com.francescocervone.movies.domain.MoviesRepository;
+import com.francescocervone.movies.domain.MoviesDataSource;
 import com.francescocervone.movies.domain.UseCase;
 import com.francescocervone.movies.domain.model.MovieDetails;
 import com.francescocervone.movies.domain.usecases.FetchMovieDetails;
@@ -57,7 +57,7 @@ public class DetailsModule {
     public UseCase<FetchMovieDetails.Request, MovieDetails> provideUseCase(
             @Named("executionScheduler") Scheduler executionScheduler,
             @Named("postExecutionScheduler") Scheduler postExecutionScheduler,
-            MoviesRepository repository) {
+            MoviesDataSource repository) {
         return new FetchMovieDetails(executionScheduler, postExecutionScheduler, repository);
     }
 

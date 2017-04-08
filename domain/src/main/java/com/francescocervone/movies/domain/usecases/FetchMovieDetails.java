@@ -1,7 +1,7 @@
 package com.francescocervone.movies.domain.usecases;
 
 
-import com.francescocervone.movies.domain.MoviesRepository;
+import com.francescocervone.movies.domain.MoviesDataSource;
 import com.francescocervone.movies.domain.UseCase;
 import com.francescocervone.movies.domain.model.MovieDetails;
 
@@ -9,18 +9,18 @@ import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
 
 public class FetchMovieDetails extends UseCase<FetchMovieDetails.Request, MovieDetails> {
-    private MoviesRepository mRepository;
+    private MoviesDataSource mDataSource;
 
     public FetchMovieDetails(Scheduler executionScheduler, Scheduler postExecutionScheduler,
-                             MoviesRepository repository) {
+                             MoviesDataSource dataSource) {
         super(executionScheduler, postExecutionScheduler);
 
-        mRepository = repository;
+        mDataSource = dataSource;
     }
 
     @Override
     protected Flowable<MovieDetails> observable(Request params) {
-        return mRepository.getMovieDetails(params.mId);
+        return mDataSource.getMovieDetails(params.mId);
     }
 
     public static class Request {

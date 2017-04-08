@@ -8,8 +8,8 @@ import com.francescocervone.movies.data.cache.NowPlayingMoviesCache;
 import com.francescocervone.movies.data.cache.SearchMoviesCache;
 import com.francescocervone.movies.data.entities.MoviesPageEntity;
 import com.francescocervone.movies.data.mapper.MovieMapper;
+import com.francescocervone.movies.domain.MoviesDataSource;
 import com.francescocervone.movies.domain.exceptions.CacheMissException;
-import com.francescocervone.movies.domain.MoviesRepository;
 import com.francescocervone.movies.domain.model.Movie;
 import com.francescocervone.movies.domain.model.MovieDetails;
 
@@ -20,14 +20,14 @@ import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 
-public class DefaultMoviesRepository implements MoviesRepository {
+public class DefaultMoviesDataSource implements MoviesDataSource {
     private final ApiManager mApiManager;
     private final NowPlayingMoviesCache mNowPlayingMoviesCache;
     private final SearchMoviesCache mSearchMoviesCache;
     private final MovieDetailsCache mMovieDetailsCache;
     private final MovieMapper mMapper;
 
-    public DefaultMoviesRepository(ApiManager apiManager,
+    public DefaultMoviesDataSource(ApiManager apiManager,
                                    NowPlayingMoviesCache nowPlayingMoviesCache,
                                    SearchMoviesCache searchMoviesCache,
                                    MovieDetailsCache movieDetailsCache,
@@ -41,13 +41,14 @@ public class DefaultMoviesRepository implements MoviesRepository {
 
     @Override
     public Flowable<List<Movie>> getNowPlayingMovies(int page) {
-        if (isFirstPage(page)) {
-            mNowPlayingMoviesCache.clear();
-        }
-        return mApiManager.nowPlayingMovies(page)
-                .flatMap(map())
-                .doOnNext(movies -> mNowPlayingMoviesCache.put(page, movies));
-
+        return Flowable.defer(() -> {
+            if (isFirstPage(page)) {
+                mNowPlayingMoviesCache.clear();
+            }
+            return mApiManager.nowPlayingMovies(page)
+                    .flatMap(map())
+                    .doOnNext(movies -> mNowPlayingMoviesCache.put(page, movies));
+        });
     }
 
     @Override
@@ -57,12 +58,14 @@ public class DefaultMoviesRepository implements MoviesRepository {
 
     @Override
     public Flowable<List<Movie>> getMovies(String query, int page) {
-        if (isFirstPage(page)) {
-            mSearchMoviesCache.clear(query);
-        }
-        return mApiManager.searchMovies(query, page)
-                .flatMap(map())
-                .doOnNext(movies -> mSearchMoviesCache.put(query, page, movies));
+        return Flowable.defer(() -> {
+            if (isFirstPage(page)) {
+                mSearchMoviesCache.clear(query);
+            }
+            return mApiManager.searchMovies(query, page)
+                    .flatMap(map())
+                    .doOnNext(movies -> mSearchMoviesCache.put(query, page, movies));
+        });
     }
 
     @Override

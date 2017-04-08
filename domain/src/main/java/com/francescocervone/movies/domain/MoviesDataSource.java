@@ -8,7 +8,7 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 
-public interface MoviesRepository {
+public interface MoviesDataSource {
     Flowable<List<Movie>> getNowPlayingMovies(int page);
 
     Flowable<List<List<Movie>>> getNowPlayingMoviesCache();

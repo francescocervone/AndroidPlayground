@@ -1,9 +1,8 @@
 package com.francescocervone.movies.listing.di;
 
-import com.francescocervone.movies.domain.MoviesRepository;
-import com.francescocervone.movies.domain.UseCase;
-import com.francescocervone.movies.domain.model.MoviesPage;
+import com.francescocervone.movies.domain.MoviesDataSource;
 import com.francescocervone.movies.domain.usecases.FetchNowPlayingMovies;
+import com.francescocervone.movies.domain.usecases.GetCachedMovies;
 import com.francescocervone.movies.domain.usecases.SearchMovies;
 import com.francescocervone.movies.listing.MoviesActivity;
 import com.francescocervone.movies.listing.mvp.MoviesContract;
@@ -48,20 +47,29 @@ public class ListingModule {
 
     @Provides
     @ListingScope
-    public UseCase<FetchNowPlayingMovies.Request, MoviesPage> provideNowPlayingUseCase(
+    public FetchNowPlayingMovies provideNowPlayingUseCase(
             @Named("executionScheduler") Scheduler executionScheduler,
             @Named("postExecutionScheduler") Scheduler postExecutionScheduler,
-            MoviesRepository repository) {
+            MoviesDataSource repository) {
         return new FetchNowPlayingMovies(executionScheduler, postExecutionScheduler, repository);
     }
 
     @Provides
     @ListingScope
-    public UseCase<SearchMovies.Request, MoviesPage> provideSearchMoviesUseCase(
+    public SearchMovies provideSearchMoviesUseCase(
             @Named("executionScheduler") Scheduler executionScheduler,
             @Named("postExecutionScheduler") Scheduler postExecutionScheduler,
-            MoviesRepository repository) {
+            MoviesDataSource repository) {
         return new SearchMovies(executionScheduler, postExecutionScheduler, repository);
+    }
+
+    @Provides
+    @ListingScope
+    public GetCachedMovies provideGetCachedMoviesUseCase(
+            @Named("executionScheduler") Scheduler executionScheduler,
+            @Named("postExecutionScheduler") Scheduler postExecutionScheduler,
+            MoviesDataSource repository) {
+        return new GetCachedMovies(executionScheduler, postExecutionScheduler, repository);
     }
 
     @Module

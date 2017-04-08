@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.francescocervone.movies.data.ApiManager;
 import com.francescocervone.movies.data.DefaultApiManager;
-import com.francescocervone.movies.data.DefaultMoviesRepository;
+import com.francescocervone.movies.data.DefaultMoviesDataSource;
 import com.francescocervone.movies.data.cache.MovieDetailsCache;
 import com.francescocervone.movies.data.cache.NowPlayingMoviesCache;
 import com.francescocervone.movies.data.cache.SearchMoviesCache;
@@ -14,7 +14,7 @@ import com.francescocervone.movies.data.cache.disk.NowPlayingMoviesDiskCache;
 import com.francescocervone.movies.data.cache.disk.SearchMoviesDiskCache;
 import com.francescocervone.movies.data.cache.disk.SearchMoviewDbHelper;
 import com.francescocervone.movies.data.mapper.MovieMapper;
-import com.francescocervone.movies.domain.MoviesRepository;
+import com.francescocervone.movies.domain.MoviesDataSource;
 
 import javax.inject.Singleton;
 
@@ -67,11 +67,11 @@ public class MoviesModule {
 
     @Provides
     @Singleton
-    public MoviesRepository provideRepository(ApiManager apiManager,
+    public MoviesDataSource provideDataSource(ApiManager apiManager,
                                               NowPlayingMoviesCache nowPlayingMoviesCache,
                                               SearchMoviesCache searchMoviesCache,
                                               MovieDetailsCache movieDetailsCache,
                                               MovieMapper mapper) {
-        return new DefaultMoviesRepository(apiManager, nowPlayingMoviesCache, searchMoviesCache, movieDetailsCache, mapper);
+        return new DefaultMoviesDataSource(apiManager, nowPlayingMoviesCache, searchMoviesCache, movieDetailsCache, mapper);
     }
 }
