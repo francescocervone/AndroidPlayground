@@ -19,7 +19,7 @@ allprojects {
 }
 
 ext {
-    supportVersion = "25.2.0"
+    supportVersion = "25.3.1"
     rxjavaVersion = "2.0.6"
     daggerVersion = "2.9"
     junitVersion = "4.12"
