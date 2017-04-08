@@ -244,6 +244,7 @@ public class MoviesPresenterTest {
         mPresenterUnderTest.loadMore();
 
         verify(mFetchNowPlayingMovies).execute(FetchNowPlayingMovies.Request.page(pageNumber + 1));
+        verifyNoMoreInteractions(mFetchNowPlayingMovies);
         verifyZeroInteractions(mSearchMovies);
         verifyZeroInteractions(mGetCachedMovies);
     }
@@ -265,6 +266,7 @@ public class MoviesPresenterTest {
         mPresenterUnderTest.loadMore();
 
         verify(mSearchMovies).execute(SearchMovies.Request.from(keyword, pageNumber + 1));
+        verifyNoMoreInteractions(mSearchMovies);
         verifyZeroInteractions(mFetchNowPlayingMovies);
         verifyZeroInteractions(mGetCachedMovies);
     }
