@@ -165,6 +165,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     @Override
     public void clearMovies() {
         mAdapter.clear();
+        mBinding.recyclerView.scrollToPosition(0);
         mScrollListener.resetState();
     }
 
