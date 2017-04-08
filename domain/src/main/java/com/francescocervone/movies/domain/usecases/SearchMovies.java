@@ -40,5 +40,24 @@ public class SearchMovies extends MoviesUseCase<SearchMovies.Request> {
         public static Request from(String query, int page) {
             return new Request(query, page);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Request)) return false;
+
+            Request request = (Request) o;
+
+            if (mPage != request.mPage) return false;
+            return mQuery != null ? mQuery.equals(request.mQuery) : request.mQuery == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = mQuery != null ? mQuery.hashCode() : 0;
+            result = 31 * result + mPage;
+            return result;
+        }
     }
 }

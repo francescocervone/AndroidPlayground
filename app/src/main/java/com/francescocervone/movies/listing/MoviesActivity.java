@@ -22,7 +22,6 @@ import com.francescocervone.movies.listing.di.ListingModule;
 import com.francescocervone.movies.listing.mvp.MoviesContract;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -204,7 +203,6 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     @Override
     public Flowable<String> observeQuery() {
         return mQueryProcessor.skip(1)
-                .throttleLast(1, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

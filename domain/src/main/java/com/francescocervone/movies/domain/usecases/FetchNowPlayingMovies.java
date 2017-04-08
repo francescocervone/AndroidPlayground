@@ -37,5 +37,21 @@ public class FetchNowPlayingMovies extends MoviesUseCase<FetchNowPlayingMovies.R
         public static Request page(int page) {
             return new Request(page);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Request)) return false;
+
+            Request request = (Request) o;
+
+            return mPage == request.mPage;
+
+        }
+
+        @Override
+        public int hashCode() {
+            return mPage;
+        }
     }
 }

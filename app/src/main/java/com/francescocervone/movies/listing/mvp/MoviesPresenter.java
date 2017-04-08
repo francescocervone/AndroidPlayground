@@ -7,6 +7,8 @@ import com.francescocervone.movies.domain.usecases.FetchNowPlayingMovies;
 import com.francescocervone.movies.domain.usecases.GetCachedMovies;
 import com.francescocervone.movies.domain.usecases.SearchMovies;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
@@ -41,6 +43,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     public void start() {
         mViewCompositeDisposable.add(mView.observeQuery()
                 .distinctUntilChanged()
+                .throttleLast(1, TimeUnit.SECONDS)
                 .subscribe(this::load));
 
         mViewCompositeDisposable.add(mView.observeMovieClicks()
