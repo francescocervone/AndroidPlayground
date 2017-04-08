@@ -236,6 +236,8 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     }
 
     private int getErrorMessage(ErrorType errorType) {
+        // The view shouldn't have "if" or "switch" at all, but since I have to decide only which
+        // string to show, I decided to do this.
         switch (errorType) {
             case SERVICE_UNAVAILABLE:
                 return R.string.service_unavailable;

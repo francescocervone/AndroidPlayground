@@ -23,7 +23,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private GetCachedMovies mGetCachedMovies;
     private MoviesContract.View mView;
 
-    private int mCurrentPage = -1;
+    private int mCurrentPage = 0;
     private String mQuery;
 
     @Inject
@@ -59,7 +59,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         prepareNewSearch(query);
 
         mRequestsCompositeDisposable.add(
-                getFirstPageFlowable().subscribe(
+                getNextPageFlowable().subscribe(
                         this::handleFirstPage,
                         this::handleError));
     }
@@ -84,7 +84,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
         mRequestsCompositeDisposable.add(
                 mGetCachedMovies.execute(request)
-                        .switchIfEmpty(getFirstPageFlowable())
+                        .switchIfEmpty(getNextPageFlowable())
                         .subscribe(
                                 this::handleFirstPage,
                                 this::handleError));
@@ -101,30 +101,17 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         mView.clearMovies();
     }
 
-    private Flowable<MoviesPage> getFirstPageFlowable() {
-        Flowable<MoviesPage> firstPageFlowable;
-        if (isEmpty(mQuery)) {
-            FetchNowPlayingMovies.Request request = FetchNowPlayingMovies.Request.firstPage();
-            firstPageFlowable = mNowPlayingMovies.execute(request);
-        } else {
-            SearchMovies.Request request = SearchMovies.Request.from(mQuery);
-            firstPageFlowable = mSearchMovies.execute(request);
-        }
-        return firstPageFlowable;
-    }
-
     private Flowable<MoviesPage> getNextPageFlowable() {
         Flowable<MoviesPage> nextPageFlowable;
         if (isEmpty(mQuery)) {
-            nextPageFlowable = mNowPlayingMovies.execute(FetchNowPlayingMovies.Request.page(++mCurrentPage));
+            nextPageFlowable = mNowPlayingMovies.execute(FetchNowPlayingMovies.Request.page(mCurrentPage + 1));
         } else {
-            nextPageFlowable = mSearchMovies.execute(SearchMovies.Request.from(mQuery, ++mCurrentPage));
+            nextPageFlowable = mSearchMovies.execute(SearchMovies.Request.from(mQuery, mCurrentPage + 1));
         }
         return nextPageFlowable;
     }
 
     private void handleFirstPage(MoviesPage page) {
-        mCurrentPage = page.getPageNumber();
         if (page.getMovies().isEmpty()) {
             mView.showEmptyView();
         } else {
@@ -134,8 +121,9 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         mView.hideContentLoader();
     }
 
-    private void handlePage(MoviesPage movies) {
-        mView.appendMovies(movies.getMovies());
+    private void handlePage(MoviesPage page) {
+        mCurrentPage = page.getPageNumber();
+        mView.appendMovies(page.getMovies());
         mView.hideListLoader();
     }
 
