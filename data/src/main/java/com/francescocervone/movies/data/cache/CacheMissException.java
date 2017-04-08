@@ -1,4 +1,4 @@
-package com.francescocervone.movies.domain.exceptions;
+package com.francescocervone.movies.data.cache;
 
 
 public class CacheMissException extends Exception {

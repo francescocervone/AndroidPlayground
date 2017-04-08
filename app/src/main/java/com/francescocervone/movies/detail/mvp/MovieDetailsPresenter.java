@@ -40,8 +40,9 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
     private void load() {
         mView.showLoader();
-        mCompositeDisposable.add(mUseCase.execute(FetchMovieDetails.Request.fromId(mMovieId))
-                .subscribe(this::feedView, this::manageError));
+        mCompositeDisposable.add(
+                mUseCase.execute(FetchMovieDetails.Request.fromId(mMovieId))
+                        .subscribe(this::feedView, this::manageError));
     }
 
     private void feedView(MovieDetails movieDetails) {
