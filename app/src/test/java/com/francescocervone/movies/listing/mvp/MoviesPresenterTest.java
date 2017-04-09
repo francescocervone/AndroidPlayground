@@ -13,7 +13,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.mockito.InOrder;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnit;
@@ -58,8 +57,7 @@ public class MoviesPresenterTest {
     @Mock
     public GetCachedMovies mGetCachedMovies;
 
-    @InjectMocks
-    public MoviesPresenter mPresenterUnderTest;
+    private MoviesPresenter mPresenterUnderTest;
 
     private PublishProcessor<String> mQueryProcessor = PublishProcessor.create();
 
@@ -69,6 +67,8 @@ public class MoviesPresenterTest {
 
     @Before
     public void setUp() throws Exception {
+        mPresenterUnderTest = new MoviesPresenter(mFetchNowPlayingMovies, mSearchMovies, mGetCachedMovies, mTestScheduler, mView);
+
         when(mView.observeMovieClicks()).thenReturn(mMovieClickProcessor);
         when(mView.observeQuery()).thenReturn(mQueryProcessor);
         when(mView.observePullToRefresh()).thenAnswer(new Answer<PublishProcessor<?>>() {
@@ -188,7 +188,6 @@ public class MoviesPresenterTest {
 
         String movieId = "id1";
         clickMovie(movieId);
-
         verify(mView).openMovieDetails(movieId);
         verifyNoMoreInteractions(mView);
     }
@@ -273,10 +272,12 @@ public class MoviesPresenterTest {
 
     private void clickMovie(String movieId) {
         mMovieClickProcessor.onNext(movieId);
+        mTestScheduler.triggerActions();
     }
 
     private void pullToRefresh() {
         mPullToRefreshProcessor.onNext(new Object());
+        mTestScheduler.triggerActions();
     }
 
     private void waitForQueryDebounce() {
@@ -285,5 +286,6 @@ public class MoviesPresenterTest {
 
     private void typeKeyword(String keyword) {
         mQueryProcessor.onNext(keyword);
+        mTestScheduler.triggerActions();
     }
 }

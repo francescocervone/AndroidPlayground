@@ -26,7 +26,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.processors.PublishProcessor;
 
 public class MoviesActivity extends AppCompatActivity implements MoviesContract.View {
@@ -202,8 +201,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
 
     @Override
     public Flowable<String> observeQuery() {
-        return mQueryProcessor.skip(1)
-                .observeOn(AndroidSchedulers.mainThread());
+        return mQueryProcessor;
     }
 
     @Override

@@ -10,8 +10,10 @@ import com.francescocervone.movies.domain.usecases.SearchMovies;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 
 import static com.francescocervone.movies.common.TextUtils.isEmpty;
@@ -23,6 +25,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private FetchNowPlayingMovies mNowPlayingMovies;
     private SearchMovies mSearchMovies;
     private GetCachedMovies mGetCachedMovies;
+    private Scheduler mPostExecutionScheduler;
     private MoviesContract.View mView;
 
     private int mCurrentPage = 0;
@@ -32,10 +35,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     public MoviesPresenter(FetchNowPlayingMovies nowPlayingMovies,
                            SearchMovies searchMovies,
                            GetCachedMovies getCachedMovies,
+                           @Named("postExecutionScheduler") Scheduler postExecutionScheduler,
                            MoviesContract.View view) {
         mNowPlayingMovies = nowPlayingMovies;
         mSearchMovies = searchMovies;
         mGetCachedMovies = getCachedMovies;
+        mPostExecutionScheduler = postExecutionScheduler;
         mView = view;
     }
 
@@ -44,12 +49,15 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         mViewCompositeDisposable.add(mView.observeQuery()
                 .distinctUntilChanged()
                 .throttleLast(1, TimeUnit.SECONDS)
+                .observeOn(mPostExecutionScheduler)
                 .subscribe(this::load));
 
         mViewCompositeDisposable.add(mView.observeMovieClicks()
+                .observeOn(mPostExecutionScheduler)
                 .subscribe(movieId -> mView.openMovieDetails(movieId)));
 
         mViewCompositeDisposable.add(mView.observePullToRefresh()
+                .observeOn(mPostExecutionScheduler)
                 .subscribe(v -> load()));
     }
 
