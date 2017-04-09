@@ -73,5 +73,21 @@ public class GetCachedMovies extends UseCase<GetCachedMovies.Request, MoviesPage
         public static Request find(String query) {
             return new Request(query);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Request)) return false;
+
+            Request request = (Request) o;
+
+            return mQuery != null ? mQuery.equals(request.mQuery) : request.mQuery == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            return mQuery != null ? mQuery.hashCode() : 0;
+        }
     }
 }

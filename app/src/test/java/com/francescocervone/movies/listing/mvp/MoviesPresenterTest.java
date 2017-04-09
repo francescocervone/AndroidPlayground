@@ -20,6 +20,7 @@ import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Flowable;
@@ -80,6 +81,7 @@ public class MoviesPresenterTest {
 
         when(mFetchNowPlayingMovies.execute(any())).thenReturn(Flowable.empty());
         when(mSearchMovies.execute(any())).thenReturn(Flowable.empty());
+        when(mGetCachedMovies.execute(any())).thenReturn(Flowable.empty());
     }
 
     @After
@@ -231,6 +233,45 @@ public class MoviesPresenterTest {
     }
 
     @Test
+    public void load_whenCalled_preparationViewMethodsCalled() {
+        mPresenterUnderTest.load();
+
+        verify(mView).clearMovies();
+        verify(mView).showContentLoader();
+        verify(mView).hideList();
+        verify(mView).hideEmptyView();
+    }
+
+    @Test
+    public void load_withException_showErrorCalled() {
+        when(mFetchNowPlayingMovies.execute(any())).thenReturn(Flowable.error(new RuntimeException()));
+        mPresenterUnderTest.load();
+
+        verify(mView).showContentError(any());
+        verify(mView).hideContentLoader();
+    }
+
+    @Test
+    public void load_withEmptyPage_showEmptyViewCalled() {
+        when(mFetchNowPlayingMovies.execute(any())).thenReturn(Flowable.just(new MoviesPage(0, Collections.emptyList())));
+        mPresenterUnderTest.load();
+
+        verify(mView).showEmptyView();
+        verify(mView).hideContentLoader();
+    }
+
+    @Test
+    public void load_withResults_showMoviesCalled() {
+        List<Movie> movies = Collections.singletonList(mock(Movie.class));
+        when(mFetchNowPlayingMovies.execute(any())).thenReturn(Flowable.just(new MoviesPage(1, movies)));
+
+        mPresenterUnderTest.load();
+
+        verify(mView).appendMovies(movies);
+        verify(mView).hideContentLoader();
+    }
+
+    @Test
     public void loadMore_withoutQuery_nextPageOfNowPlayingMoviesIsCalled() {
         int pageNumber = 2;
         when(mFetchNowPlayingMovies.execute(any()))
@@ -268,6 +309,49 @@ public class MoviesPresenterTest {
         verifyNoMoreInteractions(mSearchMovies);
         verifyZeroInteractions(mFetchNowPlayingMovies);
         verifyZeroInteractions(mGetCachedMovies);
+    }
+
+    @Test
+    public void loadMore_whenCalled_preparationViewMethodsCalled() {
+        mPresenterUnderTest.loadMore();
+
+        verify(mView).showListLoader();
+    }
+
+    @Test
+    public void loadMore_withError_showListErrorCalled() {
+        when(mFetchNowPlayingMovies.execute(any())).thenReturn(Flowable.error(new RuntimeException()));
+
+        mPresenterUnderTest.loadMore();
+
+        verify(mView).showListError(any());
+        verify(mView).hideListLoader();
+    }
+
+    @Test
+    public void loadMore_withResult_doNothing() {
+        List<Movie> movies = Collections.singletonList(mock(Movie.class));
+        when(mFetchNowPlayingMovies.execute(any())).thenReturn(Flowable.just(new MoviesPage(1, movies)));
+
+        mPresenterUnderTest.loadMore();
+
+        verify(mView).hideListLoader();
+        verify(mView).appendMovies(movies);
+    }
+
+    @Test
+    public void restore_withoutQuery_getAllCachedResults() {
+        mPresenterUnderTest.restore(null);
+
+        verify(mGetCachedMovies).execute(GetCachedMovies.Request.findAll());
+    }
+
+    @Test
+    public void restore_withQuery_getSearchCachedResults() {
+        String keyword = "The Godfather";
+        mPresenterUnderTest.restore(keyword);
+
+        verify(mGetCachedMovies).execute(GetCachedMovies.Request.find(keyword));
     }
 
     private void clickMovie(String movieId) {
