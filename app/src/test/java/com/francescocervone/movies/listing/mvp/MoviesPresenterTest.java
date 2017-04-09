@@ -7,7 +7,6 @@ import com.francescocervone.movies.domain.usecases.FetchNowPlayingMovies;
 import com.francescocervone.movies.domain.usecases.GetCachedMovies;
 import com.francescocervone.movies.domain.usecases.SearchMovies;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -68,7 +67,12 @@ public class MoviesPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        mPresenterUnderTest = new MoviesPresenter(mFetchNowPlayingMovies, mSearchMovies, mGetCachedMovies, mTestScheduler, mView);
+        mPresenterUnderTest = new MoviesPresenter(
+                mFetchNowPlayingMovies,
+                mSearchMovies,
+                mGetCachedMovies,
+                mTestScheduler,
+                mView);
 
         when(mView.observeMovieClicks()).thenReturn(mMovieClickProcessor);
         when(mView.observeQuery()).thenReturn(mQueryProcessor);
@@ -82,11 +86,6 @@ public class MoviesPresenterTest {
         when(mFetchNowPlayingMovies.execute(any())).thenReturn(Flowable.empty());
         when(mSearchMovies.execute(any())).thenReturn(Flowable.empty());
         when(mGetCachedMovies.execute(any())).thenReturn(Flowable.empty());
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
     }
 
     @Test
