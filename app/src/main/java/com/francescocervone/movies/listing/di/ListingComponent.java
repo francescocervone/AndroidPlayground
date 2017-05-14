@@ -1,12 +1,16 @@
 package com.francescocervone.movies.listing.di;
 
-import com.francescocervone.movies.common.di.ApplicationComponent;
+import com.francescocervone.movies.common.di.ActivityComponent;
+import com.francescocervone.movies.common.di.ActivityComponentBuilder;
 import com.francescocervone.movies.listing.MoviesActivity;
 
-import dagger.Component;
+import dagger.Subcomponent;
 
-@Component(dependencies = {ApplicationComponent.class}, modules = {ListingModule.class})
 @ListingScope
-public interface ListingComponent {
-    void inject(MoviesActivity activity);
+@Subcomponent(modules = {ListingModule.class})
+public interface ListingComponent extends ActivityComponent<MoviesActivity> {
+
+    @Subcomponent.Builder
+    interface Builder extends ActivityComponentBuilder<ListingModule, ListingComponent> {
+    }
 }

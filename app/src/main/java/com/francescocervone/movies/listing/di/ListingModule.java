@@ -1,5 +1,6 @@
 package com.francescocervone.movies.listing.di;
 
+import com.francescocervone.movies.common.di.ActivityModule;
 import com.francescocervone.movies.domain.MoviesDataSource;
 import com.francescocervone.movies.domain.usecases.FetchNowPlayingMovies;
 import com.francescocervone.movies.domain.usecases.GetCachedMovies;
@@ -18,10 +19,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 @Module(includes = ListingModule.Presenter.class)
-public class ListingModule {
+public class ListingModule extends ActivityModule<MoviesActivity> {
     private MoviesActivity mActivity;
 
     public ListingModule(MoviesActivity activity) {
+        super(activity);
         mActivity = activity;
     }
 

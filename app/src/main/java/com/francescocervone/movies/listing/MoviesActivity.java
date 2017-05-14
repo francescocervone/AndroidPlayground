@@ -12,12 +12,11 @@ import android.view.View;
 import com.francescocervone.movies.Movies;
 import com.francescocervone.movies.R;
 import com.francescocervone.movies.common.EndlessScrollListener;
+import com.francescocervone.movies.common.di.ActivityComponent;
 import com.francescocervone.movies.common.mvp.ErrorType;
 import com.francescocervone.movies.databinding.ActivityMoviesBinding;
 import com.francescocervone.movies.detail.MovieDetailsActivity;
 import com.francescocervone.movies.domain.model.Movie;
-import com.francescocervone.movies.listing.di.DaggerListingComponent;
-import com.francescocervone.movies.listing.di.ListingComponent;
 import com.francescocervone.movies.listing.di.ListingModule;
 import com.francescocervone.movies.listing.mvp.MoviesContract;
 
@@ -76,11 +75,12 @@ public class MoviesActivity extends AppCompatActivity implements MoviesContract.
     }
 
     private void setupPresenter() {
-        ListingComponent listingComponent = DaggerListingComponent.builder()
-                .applicationComponent(Movies.from(this).getApplicationComponent())
-                .listingModule(new ListingModule(this))
+        final ActivityComponent listingComponent = Movies.from(this)
+                .getActivityComponentBuilder(getClass())
+                .activityModule(new ListingModule(this))
                 .build();
-        listingComponent.inject(this);
+
+        listingComponent.injectMembers(this);
     }
 
     private void setupRecyclerView() {
