@@ -19,6 +19,8 @@ allprojects {
 }
 
 ext {
+    okhttpVersion = "3.8.0"
+    retrofitVersion = "2.3.0"
     supportVersion = "25.3.1"
     rxjavaVersion = "2.0.6"
     daggerVersion = "2.9"
