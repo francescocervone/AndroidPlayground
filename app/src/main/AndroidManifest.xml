@@ -15,7 +15,7 @@
         android:theme="@style/Movies"
         >
         <activity
-            android:name=".listing.MoviesActivity"
+            android:name=".ui.listing.MoviesActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             >
             <intent-filter>
@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".detail.MovieDetailsActivity">
+        <activity android:name=".ui.detail.MovieDetailsActivity">
         </activity>
     </application>
 

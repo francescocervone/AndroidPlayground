@@ -6,11 +6,11 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.VisibleForTesting;
 
-import com.francescocervone.movies.common.di.ActivityComponentBuilder;
-import com.francescocervone.movies.common.di.ApplicationComponent;
-import com.francescocervone.movies.common.di.ApplicationModule;
-import com.francescocervone.movies.common.di.DaggerApplicationComponent;
-import com.francescocervone.movies.common.di.MoviesModule;
+import com.francescocervone.movies.ui.common.di.ActivityComponentBuilder;
+import com.francescocervone.movies.ui.common.di.ApplicationComponent;
+import com.francescocervone.movies.ui.common.di.ApplicationModule;
+import com.francescocervone.movies.ui.common.di.DaggerApplicationComponent;
+import com.francescocervone.movies.ui.common.di.MoviesModule;
 
 import java.util.HashMap;
 import java.util.Map;
