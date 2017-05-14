@@ -4,9 +4,9 @@ package com.francescocervone.movies.data.cache.disk;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
-import com.francescocervone.movies.data.BuildConfig;
-import com.francescocervone.movies.data.cache.MovieDetailsCache;
+import com.francescocervone.movies.BuildConfig;
 import com.francescocervone.movies.data.cache.CacheMissException;
+import com.francescocervone.movies.data.cache.MovieDetailsCache;
 import com.francescocervone.movies.domain.model.MovieDetails;
 import com.google.gson.Gson;
 import com.jakewharton.disklrucache.DiskLruCache;

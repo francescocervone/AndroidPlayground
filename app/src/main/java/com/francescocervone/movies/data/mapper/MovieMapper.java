@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieMapper {
-    public static final String IMAGE_BASE_PATH = "https://image.tmdb.org/t/p/w1000";
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String IMAGE_BASE_PATH = "https://image.tmdb.org/t/p/w1000";
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
     private final SimpleDateFormat mSimpleDateFormat;
 
     public MovieMapper() {

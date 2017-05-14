@@ -14,7 +14,6 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
 public class GetCachedMovies extends UseCase<GetCachedMovies.Request, MoviesPage> {
@@ -39,19 +38,16 @@ public class GetCachedMovies extends UseCase<GetCachedMovies.Request, MoviesPage
                     return mDataSource.getMoviesCache(params.mQuery);
                 }
             }
-        }).onErrorResumeNext(Flowable.<List<List<Movie>>>empty()).map(mapListOfPagesToSinglePage());
+        }).onErrorResumeNext(Flowable.empty()).map(mapListOfPagesToSinglePage());
     }
 
     protected Function<List<List<Movie>>, MoviesPage> mapListOfPagesToSinglePage() {
-        return new Function<List<List<Movie>>, MoviesPage>() {
-            @Override
-            public MoviesPage apply(@NonNull List<List<Movie>> pages) throws Exception {
-                List<Movie> movies = new ArrayList<>();
-                for (List<Movie> page : pages) {
-                    movies.addAll(page);
-                }
-                return new MoviesPage(pages.size(), movies);
+        return pages -> {
+            List<Movie> movies = new ArrayList<>();
+            for (List<Movie> page : pages) {
+                movies.addAll(page);
             }
+            return new MoviesPage(pages.size(), movies);
         };
     }
 

@@ -8,7 +8,6 @@ import com.francescocervone.movies.domain.model.MoviesPage;
 import java.util.List;
 
 import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
 public abstract class MoviesUseCase<S> extends UseCase<S, MoviesPage> {
@@ -17,11 +16,6 @@ public abstract class MoviesUseCase<S> extends UseCase<S, MoviesPage> {
     }
 
     protected Function<List<Movie>, MoviesPage> mapPage(final int page) {
-        return new Function<List<Movie>, MoviesPage>() {
-            @Override
-            public MoviesPage apply(@NonNull List<Movie> movies) throws Exception {
-                return new MoviesPage(page, movies);
-            }
-        };
+        return movies -> new MoviesPage(page, movies);
     }
 }

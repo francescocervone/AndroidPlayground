@@ -9,8 +9,8 @@ import java.io.IOException;
 
 import retrofit2.HttpException;
 
-public class ErrorHandler {
-    public static Throwable convert(Throwable throwable) {
+class ErrorHandler {
+    static Throwable convert(Throwable throwable) {
         if (throwable instanceof HttpException) {
             HttpException httpException = (HttpException) throwable;
             if (isBadRequest(httpException)) {
